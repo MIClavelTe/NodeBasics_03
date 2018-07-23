@@ -29,7 +29,7 @@ function getProfile(username) {
       });  
 
     });
-    request.on('error', error => console.error(`Problem with request`));
+    request.on('error', error => printError('Problem with Request'));
   } catch (error) {
     printError('Problem with Request');
   }
