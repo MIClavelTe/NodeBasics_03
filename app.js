@@ -12,22 +12,27 @@ function printError(message) {
 function getProfile(username) {
   try {
     const request = https.get(`https://teamtreehouse.com/${username}.json`, response => {
-      let body = ""
+      if (response.statusCode === 200) {
+        let body = ""
       
-      response.on('data', data => {
-        body += data.toString();
-      });
+        response.on('data', data => {
+          body += data.toString();
+        });
 
-      response.on('end', () => {
-        try {
-          var profile = JSON.parse(body);  
-          console.log(username);                          
-          printMessage(profile.name, profile.badges.length, profile.points.JavaScript);
-        } catch (error) {
-          console.error('Your input does not exist');
-        }
-      });  
-
+        response.on('end', () => {
+          try {
+            var profile = JSON.parse(body);  
+            console.log(username);                          
+            printMessage(profile.name, profile.badges.length, profile.points.JavaScript);
+          } catch (error) {
+            console.error('Your input does not exist');
+          }
+        });  
+        
+      } else {
+        const statusError = `Status Code: ${response.statusCode}`;
+        printError(statusError);
+      }
     });
     request.on('error', error => printError('Problem with Request'));
   } catch (error) {
